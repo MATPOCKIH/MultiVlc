@@ -66,6 +66,15 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun VideoGrid() {
+    // This is the official way to access current context from Composable functions
+    val context = LocalContext.current
+
+    val mLibVLC = remember {
+        LibVLC(context, ArrayList<String>().apply {
+            add("--rtsp-tcp")
+            add("-vvv")
+        })
+    }
 
     Column(
         modifier = Modifier
@@ -78,18 +87,21 @@ fun VideoGrid() {
                 .weight(1f)
         ) {
             VideoPlayer(
+                mLibVLC,
                 modifier = Modifier
                     .fillMaxSize()
                     .weight(1f)
                     .background(colors[0])
             )
             VideoPlayer(
+                mLibVLC,
                 modifier = Modifier
                     .fillMaxSize()
                     .weight(1f)
                     .background(colors[1])
             )
             VideoPlayer(
+                mLibVLC,
                 modifier = Modifier
                     .fillMaxSize()
                     .weight(1f)
@@ -103,18 +115,21 @@ fun VideoGrid() {
                 .weight(1f)
         ) {
             VideoPlayer(
+                mLibVLC,
                 modifier = Modifier
                     .fillMaxSize()
                     .weight(1f)
                     .background(colors[3])
             )
             VideoPlayer(
+                mLibVLC,
                 modifier = Modifier
                     .fillMaxSize()
                     .weight(1f)
                     .background(colors[4])
             )
             VideoPlayer(
+                mLibVLC,
                 modifier = Modifier
                     .fillMaxSize()
                     .weight(1f)
@@ -127,18 +142,21 @@ fun VideoGrid() {
                 .weight(1f)
         ) {
             VideoPlayer(
+                mLibVLC,
                 modifier = Modifier
                     .fillMaxSize()
                     .weight(1f)
                     .background(colors[6])
             )
             VideoPlayer(
+                mLibVLC,
                 modifier = Modifier
                     .fillMaxSize()
                     .weight(1f)
                     .background(colors[7])
             )
             VideoPlayer(
+                mLibVLC,
                 modifier = Modifier
                     .fillMaxSize()
                     .weight(1f)
@@ -150,16 +168,7 @@ fun VideoGrid() {
 }
 
 @Composable
-fun VideoPlayer(modifier: Modifier = Modifier) {
-    // This is the official way to access current context from Composable functions
-    val context = LocalContext.current
-
-    val mLibVLC = remember {
-        LibVLC(context, ArrayList<String>().apply {
-            add("--rtsp-tcp")
-            add("-vvv")
-        })
-    }
+fun VideoPlayer(mLibVLC: LibVLC?, modifier: Modifier = Modifier) {
 
     val mMediaPlayer = remember {
         val url = "rtsp://facetercamstorage-01.dev.avalab.io:8554/gend/sd"
