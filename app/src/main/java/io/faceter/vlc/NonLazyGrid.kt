@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
 
@@ -51,3 +52,15 @@ fun NonLazyGrid(
         }
     }
 }
+
+val colors = listOf(
+    Color.Red,
+    Color.Blue,
+    Color.Yellow,
+    Color.Gray,
+    Color.Green,
+    Color.Black,
+    Color.Magenta,
+    Color.LightGray,
+    Color.DarkGray
+)

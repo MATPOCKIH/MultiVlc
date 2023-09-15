@@ -3,33 +3,36 @@ package io.faceter.vlc
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
 import io.faceter.vlc.ui.theme.MultiVLCTheme
-
-val colors = listOf(
-    Color.Red,
-    Color.Blue,
-    Color.Yellow,
-    Color.Gray,
-    Color.Green,
-    Color.Black,
-    Color.Magenta,
-    Color.LightGray,
-    Color.DarkGray
-)
+import androidx.activity.addCallback
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.width
+import androidx.compose.material3.Switch
+import androidx.compose.runtime.State
+import androidx.compose.ui.unit.dp
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val columns = mutableStateOf<Int?>(null)
+        val hdQuality = mutableStateOf(false)
+
+        onBackPressedDispatcher.addCallback(this) {
+            columns.value = null
+        }
+
         setContent {
             MultiVLCTheme {
                 // A surface container using the 'background' color from the theme
@@ -37,25 +40,58 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    VideoGrid(size = 3)
+                    if(columns.value == null) {
+                        HomeScreen(
+                            checked = hdQuality,
+                            onColumnsSelected = {
+                                columns.value = it
+                            },
+                            onSwitchChanged = {
+                                hdQuality.value = it
+                            }
+                        )
 
+
+                    } else {
+                        val size = columns.value ?: 3
+                        VideoGrid(size, hdQuality.value)
+                    }
                 }
             }
         }
     }
 }
 
-
-@Preview(showBackground = true)
 @Composable
-fun GreetingPreview() {
-    MultiVLCTheme {
-        NonLazyGrid(columns = 3, itemCount = 9, fillMaxHeight = true) {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(colors[it])
-            )
+fun HomeScreen(
+    checked: State<Boolean>,
+    onColumnsSelected: (Int) -> Unit,
+    onSwitchChanged: (Boolean) -> Unit,
+) {
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Button(onClick = { onColumnsSelected(2) }) {
+            Text(text = "2x2")
         }
+        Button(onClick = { onColumnsSelected(3) }) {
+            Text(text = "3x3")
+        }
+        Button(onClick = { onColumnsSelected(4) }) {
+            Text(text = "4x4")
+        }
+
+        Row (verticalAlignment = Alignment.CenterVertically){
+            Text(text = "SD")
+            Spacer(modifier = Modifier.width(5.dp))
+            Switch(checked = checked.value, onCheckedChange = {
+                onSwitchChanged(it)
+            })
+            Spacer(modifier = Modifier.width(5.dp))
+            Text(text = "HD")
+        }
+
     }
 }
